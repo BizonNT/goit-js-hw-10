@@ -29,10 +29,12 @@ function onLoad() {
           placeholderText: 'Choose a Breed',
         },
       });
-      classID = inputSelect.dataset.id;
       loaded();
     })
-    .catch(error => onError(error));
+    .catch(error => {
+      console.log(error)
+      onError(error)
+    });
 }
 
 function loading() {
@@ -50,9 +52,14 @@ function loaded() {
 }
 
 function onError() {
+  const hideSelect = document.querySelector('.ss-main');
+  hideSelect.style.display = 'none';
   breedCard.style.display = 'none';
   loaderEl.style.display = 'none';
   Notiflix.Notify.failure(errorEl.textContent);
+  setTimeout(() => {
+    errorEl.style.display = 'flex';
+  }, 10000);
 }
 
 inputSelect.addEventListener('change', onInput);
@@ -68,13 +75,19 @@ function onInput(event) {
         breedCard.innerHTML = cardMarkup(data);
         loaded();
       })
-      .catch(error => onError(error));
+      .catch(error => {
+        console.log(error);
+        onError(error);
+      });
   } else {
     fetchCurrentBreedImg(imageId)
       .then(data => {
         breedCard.innerHTML = cardMarkupImg(data);
         loaded();
       })
-      .catch(error => onError(error));
+      .catch(error => {
+        console.log(error);
+        onError(error);
+      });
   }
 }
