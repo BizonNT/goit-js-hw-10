@@ -3,10 +3,10 @@ import SlimSelect from 'slim-select';
 import Notiflix from 'notiflix';
 Notiflix.Notify.init({
   width: '500px',
-  position: 'center-top',
+  position: 'left-bottom',
   distance: '25px',
   fontSize: '16px',
-  timeout: 9000,
+  timeout: 4000,
 });
 
 import { fetchBreeds, fetchCatByBreed, fetchCurrentBreedImg } from './cat-api';
@@ -31,10 +31,7 @@ function onLoad() {
       });
       loaded();
     })
-    .catch(error => {
-      console.log(error)
-      onError(error)
-    });
+    .catch(error => onError(error));
 }
 
 function loading() {
@@ -52,14 +49,11 @@ function loaded() {
 }
 
 function onError() {
-  const hideSelect = document.querySelector('.ss-main');
-  hideSelect.style.display = 'none';
   breedCard.style.display = 'none';
   loaderEl.style.display = 'none';
   Notiflix.Notify.failure(errorEl.textContent);
-  setTimeout(() => {
-    errorEl.style.display = 'flex';
-  }, 10000);
+  errorEl.style.display = 'flex';
+  errorEl.classList.remove('hidden-field');
 }
 
 inputSelect.addEventListener('change', onInput);
@@ -75,19 +69,13 @@ function onInput(event) {
         breedCard.innerHTML = cardMarkup(data);
         loaded();
       })
-      .catch(error => {
-        console.log(error);
-        onError(error);
-      });
+      .catch(error => onError(error));
   } else {
     fetchCurrentBreedImg(imageId)
       .then(data => {
         breedCard.innerHTML = cardMarkupImg(data);
         loaded();
       })
-      .catch(error => {
-        console.log(error);
-        onError(error);
-      });
+      .catch(error => onError(error));
   }
 }
