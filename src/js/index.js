@@ -53,9 +53,6 @@ function onError() {
   breedCard.style.display = 'none';
   loaderEl.style.display = 'none';
   Notiflix.Notify.failure(errorEl.textContent);
-  setTimeout(() => {
-    onLoad();
-  }, 10000);
 }
 
 inputSelect.addEventListener('change', onInput);
