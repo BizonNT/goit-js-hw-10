@@ -18,17 +18,9 @@ export function fetchBreeds() {
   });
 }
 
-export function fetchCurrentBreedImg(imageId) {
-  return fetch(`${BASE_URL}${IMAGES}${imageId}`, options).then(response => {
-    if (!response.ok) {
-      throw new Error(response.status);
-    }
-    return response.json();
-  });
-}
-
-export function fetchCatByBreed(breedId) {
-  return fetch(`${BASE_URL}${BREEDS}${breedId}`, options).then(response => {
+export function fetchCatByBreed(Id) {
+  const endPoint = Id.length === 4 ? BREEDS : IMAGES;
+  return fetch(`${BASE_URL}${endPoint}${Id}`, options).then(response => {
     if (!response.ok) {
       throw new Error(response.status);
     }

@@ -9,13 +9,14 @@ Notiflix.Notify.init({
   timeout: 4000,
 });
 
-import { fetchBreeds, fetchCatByBreed, fetchCurrentBreedImg } from './cat-api';
-import { selectMarkup, cardMarkup, cardMarkupImg } from './markup';
+import { fetchBreeds, fetchCatByBreed } from './cat-api';
+import { selectMarkup, cardMarkup } from './markup';
 
 const inputSelect = document.querySelector('.js-breed-select');
 const breedCard = document.querySelector('.js-breed-card');
 const loaderEl = document.querySelector('.loader');
 const errorEl = document.querySelector('.error');
+let hideSelect = '';
 
 onLoad();
 
@@ -29,27 +30,20 @@ function onLoad() {
           placeholderText: 'Choose a Breed',
         },
       });
-      loaded();
+      hideSelect = document.querySelector('.ss-main');
+      displaySet('flex', 'none');
     })
     .catch(error => onError(error));
+  // .finally(() => loaded());
 }
 
-function loading() {
-  const hideSelect = document.querySelector('.ss-main');
-  hideSelect.style.display = 'none';
-  breedCard.style.display = 'none';
-  loaderEl.style.display = 'block';
+function displaySet(hide, visible) {
+  hideSelect.style.display = hide;
+  breedCard.style.display = hide;
+  loaderEl.style.display = visible;
 }
 
-function loaded() {
-  const hideSelect = document.querySelector('.ss-main');
-  hideSelect.style.display = 'flex';
-  breedCard.style.display = 'flex';
-  loaderEl.style.display = 'none';
-}
-
-function onError() {
-  breedCard.style.display = 'none';
+export function onError() {
   loaderEl.style.display = 'none';
   Notiflix.Notify.failure(errorEl.textContent);
   errorEl.style.display = 'flex';
@@ -59,23 +53,14 @@ function onError() {
 inputSelect.addEventListener('change', onInput);
 
 function onInput(event) {
-  loading();
-  const breedId = event.currentTarget.value;
+  displaySet('none', 'block');
   const imageId =
     event.currentTarget.options[inputSelect.selectedIndex].dataset.id;
-  if (imageId === 'undefined') {
-    fetchCatByBreed(breedId)
-      .then(data => {
-        breedCard.innerHTML = cardMarkup(data);
-        loaded();
-      })
-      .catch(error => onError(error));
-  } else {
-    fetchCurrentBreedImg(imageId)
-      .then(data => {
-        breedCard.innerHTML = cardMarkupImg(data);
-        loaded();
-      })
-      .catch(error => onError(error));
-  }
+  fetchCatByBreed(imageId)
+    .then(data => {
+      breedCard.innerHTML = cardMarkup(data);
+      displaySet('flex', 'none');
+    })
+    .catch(error => onError(error));
+  // .finally(() => loading('flex', 'none'));
 }
