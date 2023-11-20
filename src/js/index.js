@@ -34,7 +34,6 @@ function onLoad() {
       displaySet('flex', 'none');
     })
     .catch(error => onError(error));
-  // .finally(() => loaded());
 }
 
 function displaySet(hide, visible) {
@@ -43,7 +42,7 @@ function displaySet(hide, visible) {
   loaderEl.style.display = visible;
 }
 
-export function onError() {
+function onError() {
   loaderEl.style.display = 'none';
   Notiflix.Notify.failure(errorEl.textContent);
   errorEl.style.display = 'flex';
@@ -62,5 +61,4 @@ function onInput(event) {
       displaySet('flex', 'none');
     })
     .catch(error => onError(error));
-  // .finally(() => loading('flex', 'none'));
 }
